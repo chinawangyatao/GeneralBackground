@@ -1,5 +1,5 @@
 import React, { memo, Suspense } from 'react';
-import { Card, Col, Layout, Menu, Row } from 'antd';
+import { Col, Layout, Menu, Row } from 'antd';
 import { LayoutWrapper } from './style';
 import Header from './cnps/header';
 import routes from '@/router';
@@ -33,10 +33,10 @@ const Index = memo(() => {
           </Layout.Sider>
           <Layout style={{ minHeight: '100vh', position: 'relative' }}>
             <Header />
-            <Row gutter={[40, 100]}>
+            <Row gutter={[40, 80]}>
               <Col span={24}></Col>
               <Col xxl={{ span: 20, offset: 3 }} xl={{ span: 20, offset: 4 }} lg={{ span: 20, offset: 5 }}>
-                <Layout.Content>
+                <Layout.Content style={{ marginLeft: '20px' }}>
                   <VmBreadcrumb />
                   <Suspense fallback={'loading...'}>{useRoutes(routes)}</Suspense>
                 </Layout.Content>

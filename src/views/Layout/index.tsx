@@ -3,11 +3,12 @@ import { Col, Layout, Menu, Row } from 'antd';
 import { LayoutWrapper } from './style';
 import Header from './cnps/header';
 import routes from '@/router';
-import { useNavigate, useRoutes } from 'react-router-dom';
+import { RouteObject, useNavigate, useRoutes } from 'react-router-dom';
 import VmBreadcrumb from '@/views/Layout/cnps/VmBreadcrumb';
 
 const Index = memo(() => {
   const navigate = useNavigate();
+  const getRoutesList: RouteObject[] = routes as RouteObject[];
   return (
     <>
       <LayoutWrapper>
@@ -24,10 +25,17 @@ const Index = memo(() => {
               mode="inline"
               defaultSelectedKeys={['/dashboard']}
               onSelect={e => navigate(e.key)}
-              items={routes.map((item, index) => ({
+              items={getRoutesList.map((item: any, index) => ({
                 key: item.path,
                 icon: item.icon,
                 label: item.name,
+                children: item['children']?.map((x: any) => {
+                  return {
+                    key: x.path,
+                    icon: x.icon,
+                    label: x.name,
+                  };
+                }),
               }))}
             />
           </Layout.Sider>
@@ -38,7 +46,7 @@ const Index = memo(() => {
               <Col xxl={{ span: 20, offset: 3 }} xl={{ span: 20, offset: 4 }} lg={{ span: 20, offset: 5 }}>
                 <Layout.Content style={{ marginLeft: '20px' }}>
                   <VmBreadcrumb />
-                  <Suspense fallback={'loading...'}>{useRoutes(routes)}</Suspense>
+                  <Suspense fallback={'loading...'}>{useRoutes(getRoutesList)}</Suspense>
                 </Layout.Content>
               </Col>
             </Row>

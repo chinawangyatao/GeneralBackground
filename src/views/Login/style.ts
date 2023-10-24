@@ -33,5 +33,21 @@ export const LoginWrapper = styled.div`
   .ant-card-body {
     box-shadow: 11px 11px 22px 0px rgba(0, 0, 0, 0.1);
   }
+.verificationCode{
+  display: flex;
+  align-items: end;
+  div{
+    flex: 1;
+    .ant-input{
+      width: 180px;
+    }
+  }
+  img{
+    //flex: 1;
+    width: 100px;
+    height: 40px;
+    cursor: pointer;
+  }
+}
 
 `;

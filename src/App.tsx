@@ -1,19 +1,19 @@
 import React, { Suspense } from 'react';
 import './App.css';
-import { useAppDispatch, useAppReducer } from './store';
+import { useAppDispatch, useAppSelector } from './store';
 import Layout from './views/Layout';
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, HashRouter, Navigate, Route, Routes } from 'react-router-dom';
 import Login from './views/Login';
 import Register from './views/Register';
 import NotFound from './views/NotFound';
 import VmAuthRoute from '@/components/VmAuthRoute';
 
 function App() {
-  const counterStore = useAppReducer((store: any) => store.counters);
+  const counterStore = useAppSelector((store: any) => store.counters);
   const dispatch = useAppDispatch();
   return (
     <>
-      <BrowserRouter>
+      <HashRouter>
         <Suspense fallback={<span>loading...</span>}>
           <Routes>
             <Route
@@ -30,7 +30,7 @@ function App() {
             <Route path={'/'} element={<Navigate to={'/dashboard'} />} />
           </Routes>
         </Suspense>
-      </BrowserRouter>
+      </HashRouter>
     </>
   );
 }

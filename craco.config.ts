@@ -32,7 +32,8 @@ module.exports = {
     },
     proxy: {
       '/api': {
-        target: 'http://6fjjyf.natappfree.cc/',
+        // target: 'http://e6qzid.natappfree.cc/',
+        target: 'http://101.43.240.139:8888/',
         changeOrigin: true,
         pathRewrite: {
           '^/api': '',

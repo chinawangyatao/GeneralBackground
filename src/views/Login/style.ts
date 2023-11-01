@@ -1,5 +1,8 @@
 import styled from 'styled-components';
-
+import bg1 from '@/assets/bg1.jpg';
+import bg2 from '@/assets/bg2.jpg';
+import bg3 from '@/assets/bg3.jpg';
+import bg4 from '@/assets/bg4.jpg';
 export const LoginWrapper = styled.div`
   height: 100vh;
   /*弹性布局居中*/
@@ -7,7 +10,9 @@ export const LoginWrapper = styled.div`
   justify-content: center;
   align-items: center;
   /*渐变背景*/
-  background: linear-gradient(200deg, #d19fea, #a9c1ed);
+  //background: linear-gradient(200deg, #d19fea, #a9c1ed);
+  background: url(${bg4}) no-repeat center center;
+  background-size: cover;
   /*溢出影藏*/
   overflow: hidden;
 .titleName{
@@ -16,7 +21,22 @@ export const LoginWrapper = styled.div`
   transform: translateY(50%);
 }
   .loginCard{
-    flex: 1;
+    .ant-card-body{
+        display: flex;
+      .content{
+        width: 200px;
+        position: relative;
+        img{
+          width: 100px;
+          position: absolute;
+          left: 0;
+          right: 0;
+          top: 0;
+          bottom: 0;
+          margin: auto;
+        }
+      }
+      }
 
   }
   .loginTitle {

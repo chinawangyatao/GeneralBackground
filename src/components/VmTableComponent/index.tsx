@@ -2,12 +2,14 @@ import React, { memo } from 'react';
 import { VmTableWrapper } from '@/components/VmTableComponent/style';
 import { Button, Space, Table, Tag } from 'antd';
 import { ColumnsType } from 'antd/es/table';
+import { userListPropTypes } from '@/service/api/type';
 
 const Index = memo(() => {
+  console.log(columns);
   return (
     <>
       <VmTableWrapper>
-        <Table dataSource={data} columns={columns}></Table>
+        <Table columns={columns}></Table>
       </VmTableWrapper>
     </>
   );
@@ -23,51 +25,53 @@ interface DataType {
 
 const columns: ColumnsType<DataType> = [
   {
-    title: 'Name',
-    dataIndex: 'name',
-    key: 'name',
-    render: text => <a>{text}</a>,
+    title: '用户编号',
+    dataIndex: 'userId',
+    key: 'userId',
   },
   {
-    title: 'Age',
-    dataIndex: 'age',
-    key: 'age',
+    title: '用户名称',
+    dataIndex: 'userName',
+    key: 'userName',
   },
   {
-    title: 'Address',
-    dataIndex: 'address',
-    key: 'address',
+    title: '用户昵称',
+    dataIndex: 'nickName',
+    key: 'nickName',
   },
   {
-    title: 'Tags',
-    key: 'tags',
-    dataIndex: 'tags',
-    render: (_, { tags }) => (
-      <>
-        {tags.map((tag: string) => {
-          let color = tag.length > 5 ? 'geekblue' : 'green';
-          if (tag === 'loser') {
-            color = 'volcano';
-          }
-          return (
-            <Tag color={color} key={tag}>
-              {tag.toUpperCase()}
-            </Tag>
-          );
-        })}
-      </>
-    ),
+    title: '部门',
+    dataIndex: 'deptName',
+    key: 'deptName',
   },
   {
-    title: 'Action',
+    title: '手机号码',
+    dataIndex: 'phonenumber',
+    key: 'phonenumber',
+  },
+  {
+    title: '状态',
+    dataIndex: 'status',
+    key: 'status',
+  },
+  {
+    title: '创建时间',
+    dataIndex: 'createTime',
+    key: 'createTime',
+  },
+  {
+    title: '操作',
     key: 'action',
-    render: (_, record) => (
-      <Space size={5}>
+    render: (value, record) => (
+      <Space size={'middle'}>
         <Button type={'primary'} size={'small'}>
-          {record.name}
+          修改
         </Button>
-        <Button type={'primary'} danger size={'small'}>
+        <Button type={'primary'} size={'small'} danger={true}>
           删除
+        </Button>
+        <Button type={'primary'} size={'small'}>
+          更多
         </Button>
       </Space>
     ),

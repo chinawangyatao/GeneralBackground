@@ -2,8 +2,8 @@ import React, { memo, useEffect, useState } from 'react';
 import { LoginWrapper } from './style';
 import { Button, Card, Col, Form, Input, message, notification, Row } from 'antd';
 import { code, login } from '@/service/api';
-import { encrypt } from '@/utils/jsencrypt';
 import { useNavigate } from 'react-router-dom';
+import dongtu from '@/assets/dongtu.gif';
 
 const onFinishFailed = (e: any) => {
   console.log(e);
@@ -14,6 +14,7 @@ const Index = memo(() => {
   const [uuid, setUuid] = useState('');
   const [messageApi, contextHolder] = message.useMessage();
   const navigate = useNavigate();
+
   useEffect(() => {
     getCode();
   }, []);
@@ -31,11 +32,15 @@ const Index = memo(() => {
         navigate('/');
       } else {
         messageApi.warning(res.msg);
+        await getCode();
       }
     } catch (e) {
       console.log(e);
+      await getCode();
     }
   };
+
+  // 获取验证码
   const getCode = async () => {
     try {
       const res: any = await code();
@@ -46,6 +51,7 @@ const Index = memo(() => {
       console.log(e);
     }
   };
+
   const openWarning = () => {
     notification.error({
       message: '注意',
@@ -55,13 +61,16 @@ const Index = memo(() => {
   return (
     <LoginWrapper>
       {contextHolder}
-      <div className={'titleName'}>
-        <h1>后台管理系统</h1>
-        <p>一套基于 react 开发的后台管理系统</p>
-        <p>由©️微梦创新团队开发</p>
-      </div>
+      {/*<div className={'titleName'}>*/}
+      {/*  <h1>后台管理系统</h1>*/}
+      {/*  <p>一套基于 react 开发的后台管理系统</p>*/}
+      {/*  <p>由©️微梦创新团队开发</p>*/}
+      {/*</div>*/}
       <div className={'loginCard'}>
-        <Card style={{ position: 'absolute' }}>
+        <Card>
+          <div className={'content'}>
+            <img src={dongtu} alt={'动图'} />
+          </div>
           <Form style={{ minWidth: 300 }} autoComplete="off" onFinish={onFinish} onFinishFailed={onFinishFailed}>
             <Form.Item>
               <div className={'loginTitle'}>登录</div>

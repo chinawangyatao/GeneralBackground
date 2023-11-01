@@ -1,13 +1,25 @@
-import React, { memo } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import { HeaderWrapper } from './style';
 import { Avatar, Dropdown, Layout, message } from 'antd';
 import { LogoutOutlined, MessageOutlined, UserOutlined } from '@ant-design/icons';
-import { removeToken } from '@/utils';
+import { getToken, removeToken } from '@/utils';
 import { useNavigate } from 'react-router-dom';
-import { logOut } from '@/service/api';
+import { logOut, userInfo } from '@/service/api';
 
 const Index = memo(() => {
   const navigate = useNavigate();
+  const [avatar, setAvatar] = useState('');
+  useEffect(() => {
+    getUserInfo();
+  }, []);
+  const getUserInfo = async () => {
+    try {
+      const res: any = await userInfo();
+      setAvatar(res.user.avatar + `?token=${getToken('access_token')}`);
+    } catch (e) {
+      console.log(e);
+    }
+  };
   const logOutHandle = async () => {
     removeToken('access_token');
     try {
@@ -44,7 +56,11 @@ const Index = memo(() => {
         <Layout.Header>
           <div className={'avatar'}>
             <Dropdown menu={{ items }}>
-              <Avatar style={{ background: '#1677ff', cursor: 'pointer' }} size={35} icon={<UserOutlined />} />
+              {avatar ? (
+                <Avatar crossOrigin={'anonymous'} size={40} src={avatar} />
+              ) : (
+                <Avatar crossOrigin={'anonymous'} size={40} src={<UserOutlined />} />
+              )}
             </Dropdown>
           </div>
         </Layout.Header>

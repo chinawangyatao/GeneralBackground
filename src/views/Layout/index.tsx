@@ -1,13 +1,20 @@
-import React, { memo, Suspense } from 'react';
+import React, { memo, Suspense, useEffect, useState } from 'react';
 import { Col, Layout, Menu, Row } from 'antd';
 import { LayoutWrapper } from './style';
 import Header from './cnps/header';
 import routes from '@/router';
-import { RouteObject, useNavigate, useRoutes } from 'react-router-dom';
+import { RouteObject, useLocation, useNavigate, useRoutes } from 'react-router-dom';
 import VmBreadcrumb from '@/views/Layout/cnps/VmBreadcrumb';
+import { useAppDispatch } from '@/store';
+import { getUserInfo } from '@/store/features/userSlice';
 
 const Index = memo(() => {
+  const dispatch = useAppDispatch();
+  dispatch(getUserInfo());
   const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {}, []);
   const getRoutesList: RouteObject[] = routes as RouteObject[];
   return (
     <>
@@ -15,12 +22,16 @@ const Index = memo(() => {
         <Layout>
           <div className={'layoutLeft'}>
             <Layout.Sider width={200} breakpoint={'lg'} collapsedWidth="0" className={'siderLeft'}>
-              <div className="demo-logo-vertical">LOGO</div>
+              <div className="demo-logo-vertical">ruoyi-react</div>
               <Menu
                 theme="dark"
                 mode="inline"
-                defaultSelectedKeys={['/dashboard']}
-                onSelect={e => navigate(e.key)}
+                defaultSelectedKeys={[location.pathname]}
+                defaultOpenKeys={[localStorage.getItem('defaultOpenMenu') ?? 'defaultValue']}
+                onSelect={e => {
+                  localStorage.setItem('defaultOpenMenu', e.keyPath[1]);
+                  navigate(e.key);
+                }}
                 items={getRoutesList.map((item: any, index) => ({
                   key: item.path,
                   icon: item.icon,
@@ -39,7 +50,7 @@ const Index = memo(() => {
 
           <Layout style={{ minHeight: '100vh', position: 'relative' }}>
             <Header />
-            <Row style={{ marginTop: '80px' }}>
+            <Row style={{ marginTop: '80px', height: '100%' }}>
               <Col span={23}>
                 <Layout.Content style={{ marginLeft: '20px', width: '100%' }}>
                   <VmBreadcrumb />

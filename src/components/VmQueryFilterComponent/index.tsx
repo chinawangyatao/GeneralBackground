@@ -3,9 +3,12 @@ import { VmQueryFilterComponentWrapper } from '@/components/VmQueryFilterCompone
 import {
   ProFormCheckbox,
   ProFormDatePicker,
+  ProFormDateRangePicker,
+  ProFormDateTimeRangePicker,
   ProFormRadio,
   ProFormSelect,
   ProFormText,
+  ProFormTimePicker,
   QueryFilter,
 } from '@ant-design/pro-components';
 import { Skeleton } from 'antd';
@@ -18,7 +21,12 @@ const Index: React.FC<QueryFilterType> = memo(props => {
   return (
     <>
       <VmQueryFilterComponentWrapper>
-        <QueryFilter defaultCollapsed split onFinish={props.VmQueryFilterList.handle}>
+        <QueryFilter
+          defaultCollapsed
+          split
+          onFinish={props.VmQueryFilterList.onFinishHandle}
+          onReset={props.VmQueryFilterList.onResetHandle}
+        >
           {props.VmQueryFilterList.list.length > 0 ? (
             props.VmQueryFilterList.list.map((item: any, index: number) => {
               switch (item.type) {
@@ -46,6 +54,8 @@ const Index: React.FC<QueryFilterType> = memo(props => {
                       key={index}
                     />
                   );
+                case 'ProFormDateRangePicker':
+                  return <ProFormDateRangePicker key={item.key} width={'lg'} name={item.name} label={item.label} />;
               }
             })
           ) : (

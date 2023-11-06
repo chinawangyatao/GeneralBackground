@@ -25,12 +25,6 @@ const request = new Request({
     requestInterceptors: config => {
       if (getToken('access_token')) {
         config.headers.Authorization = 'Bearer ' + getToken('access_token');
-      } else {
-        // 解决token意外消失的问题
-        message.error({
-          content: '登录过期,正在跳转登录页',
-        });
-        window.location.hash = '/login';
       }
       return config;
     },

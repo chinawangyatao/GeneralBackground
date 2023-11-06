@@ -55,3 +55,11 @@ export const roleList = (data: roleListPropTypes) => {
     data,
   });
 };
+// 更新用户列表
+export const changeStatus = (data: any) => {
+  return VmRequest({
+    url: '/system/user/changeStatus',
+    method: 'PUT',
+    data,
+  });
+};

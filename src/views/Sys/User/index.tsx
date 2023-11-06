@@ -1,85 +1,21 @@
 import React, { memo, useEffect, useState } from 'react';
 import { UserWrapper } from '@/views/Sys/User/style';
 import VmTreeComponent from '@/components/VmTreeComponent';
-import { Button, Card, Col, Empty, Row, Space, Switch, Table, TreeProps } from 'antd';
-import VmTableComponent from '@/components/VmTableComponent';
-import { userInfoTree, userList } from '@/service/api';
+import { Button, Card, Col, Empty, message, Modal, Row, Space, Switch, Table, TreeProps } from 'antd';
+import { changeStatus, userInfoTree, userList } from '@/service/api';
 import { userListPropTypes } from '@/service/api/type';
 import { ColumnsDataType } from '@/views/Sys/User/type';
 import { ColumnsType } from 'antd/es/table';
 import VmSearchComponent from '@/components/VmQueryFilterComponent';
-import { DownloadOutlined, EditOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons';
-import { getUserInfo } from '@/store/features/userSlice';
+import { ExclamationCircleFilled, PlusOutlined } from '@ant-design/icons';
+import ModelTable from '@/views/Sys/User/cnps/modelTable';
 
 // 表头
-let columns: ColumnsType<ColumnsDataType> = [
-  {
-    title: '用户编号',
-    dataIndex: 'userId',
-    key: 'userId',
-  },
-  {
-    title: '用户名称',
-    dataIndex: 'userName',
-    key: 'userName',
-  },
-  {
-    title: '用户昵称',
-    dataIndex: 'nickName',
-    key: 'nickName',
-  },
-  {
-    title: '部门',
-    dataIndex: 'deptName',
-    key: 'deptName',
-    render: (_, record) => <span>{record.dept.deptName}</span>,
-  },
-  {
-    title: '手机号码',
-    dataIndex: 'phonenumber',
-    key: 'phonenumber',
-  },
-  {
-    title: '状态',
-    dataIndex: 'status',
-    key: 'status',
-    render: (_, record) => (
-      <Space>
-        <Switch checked={record.status === '0'} />
-      </Space>
-    ),
-  },
-  {
-    title: '创建时间',
-    dataIndex: 'createTime',
-    key: 'createTime',
-  },
-  {
-    title: '操作',
-    key: 'action',
-    render: (value, record) => (
-      <Space size={5}>
-        {!value.admin && (
-          <>
-            <Button type={'primary'} size={'small'}>
-              修改
-            </Button>
-            <Button type={'primary'} size={'small'} danger={true}>
-              删除
-            </Button>
-            <Button type={'primary'} size={'small'}>
-              更多
-            </Button>
-          </>
-        )}
-      </Space>
-    ),
-  },
-];
 
 const Index = memo(() => {
   const [userInfoTreeList, setUserInfoTreeList] = useState([]);
   const [userData, setUserData] = useState([]);
+  const [openModel, setOpenModel] = useState(false);
   useEffect(() => {
     getUserTreeInfo();
     getUserListInfo();
@@ -106,9 +42,32 @@ const Index = memo(() => {
     }
   };
 
+  const upDataStatus = async (status: any) => {
+    await changeStatus(status);
+  };
+
   const onSelect: TreeProps['onSelect'] = async selectedKeys => {
     const [deptId] = selectedKeys;
     await getUserListInfo({ deptId });
+  };
+
+  const changeUserStatus = (e: boolean, value: string, data: any) => {
+    Modal.confirm({
+      title: '系统提示',
+      content: `确认要${e ? '启用' : '停用'}"${value}"用户吗？`,
+      icon: <ExclamationCircleFilled />,
+      onOk: async () => {
+        const status = {
+          status: e ? '0' : '1',
+          userId: data.userId,
+        };
+        const res: any = await changeStatus(status);
+        await getUserListInfo();
+        message.success({
+          content: res.msg,
+        });
+      },
+    });
   };
 
   const filterList = {
@@ -133,6 +92,70 @@ const Index = memo(() => {
       },
     ],
   };
+  let columns: ColumnsType<ColumnsDataType> = [
+    {
+      title: '用户编号',
+      dataIndex: 'userId',
+      key: 'userId',
+    },
+    {
+      title: '用户名称',
+      dataIndex: 'userName',
+      key: 'userName',
+    },
+    {
+      title: '用户昵称',
+      dataIndex: 'nickName',
+      key: 'nickName',
+    },
+    {
+      title: '部门',
+      dataIndex: 'deptName',
+      key: 'deptName',
+      render: (_, record) => <span>{record.dept.deptName}</span>,
+    },
+    {
+      title: '手机号码',
+      dataIndex: 'phonenumber',
+      key: 'phonenumber',
+    },
+    {
+      title: '状态',
+      dataIndex: 'status',
+      key: 'status',
+      render: (_, record) => (
+        <Space>
+          <Switch checked={record.status === '0'} onChange={e => changeUserStatus(e, record.userName, record)} />
+        </Space>
+      ),
+    },
+    {
+      title: '创建时间',
+      dataIndex: 'createTime',
+      key: 'createTime',
+    },
+    {
+      title: '操作',
+      key: 'action',
+      render: (value, record) => (
+        <Space size={5}>
+          {!value.admin && (
+            <>
+              <Button type={'primary'} size={'small'}>
+                修改
+              </Button>
+              <Button type={'primary'} size={'small'} danger={true}>
+                删除
+              </Button>
+              <Button type={'primary'} size={'small'}>
+                更多
+              </Button>
+            </>
+          )}
+        </Space>
+      ),
+    },
+  ];
   return (
     <>
       <UserWrapper>
@@ -144,7 +167,13 @@ const Index = memo(() => {
             <Card>
               <VmSearchComponent VmQueryFilterList={filterList} />
               <Space align={'center'}>
-                <Button type={'primary'} icon={<PlusOutlined />}>
+                <Button
+                  type={'primary'}
+                  icon={<PlusOutlined />}
+                  onClick={e => {
+                    setOpenModel(true);
+                  }}
+                >
                   新增
                 </Button>
               </Space>
@@ -154,6 +183,7 @@ const Index = memo(() => {
                 dataSource={userData}
                 rowKey={record => record.userId}
               />
+              <ModelTable open={openModel} colse={() => setOpenModel(false)} />
             </Card>
           </Col>
         </Row>

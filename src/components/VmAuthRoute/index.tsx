@@ -7,7 +7,7 @@ interface IndexProps {
   children: ReactNode;
 }
 
-const Index = memo(({ children }: IndexProps) => {
+const Index = ({ children }: IndexProps) => {
   const [messageApi] = message.useMessage();
 
   const token = getToken('access_token');
@@ -20,6 +20,6 @@ const Index = memo(({ children }: IndexProps) => {
   } else {
     return <Navigate to={'/login'} />;
   }
-});
+};
 
 export default Index;

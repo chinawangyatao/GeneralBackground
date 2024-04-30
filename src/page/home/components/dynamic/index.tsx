@@ -3,6 +3,8 @@ import { Avatar, Button, List, Skeleton } from 'antd'
 
 import './index.less'
 
+import {resApi} from '/@/assets/mock';
+
 interface DataType {
     gender?: string
     name: {
@@ -30,13 +32,11 @@ const Index: React.FC = () => {
     const [list, setList] = useState<DataType[]>([])
 
     useEffect(() => {
-        fetch(fakeDataUrl)
-            .then((res) => res.json())
-            .then((res) => {
-                setInitLoading(false)
-                setData(res.results)
-                setList(res.results)
-            })
+        const res = resApi
+        setInitLoading(false)
+        setData(res.results)
+        setList(res.results)
+
     }, [])
 
     const onLoadMore = () => {
